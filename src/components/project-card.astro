@@ -4,6 +4,7 @@ const { project } = Astro.props;
 import { Image } from 'astro:assets';
 import { resolveAssetImage } from '../utils/images';
 import { getProjectCategories } from '../utils/project-meta';
+import { url } from '../utils/url';
 
 // Map through the array of image strings from project JSON
 const optimizedImages = await Promise.all(
@@ -48,7 +49,7 @@ const platformIconMap: Record<string, string> = {
 
     <!-- 1. Кликабельная ссылка — покрывает всю область, самый низкий z-index -->
     <a
-      href={`/projects/${project.slug}/`}
+      href={url(`/projects/${project.slug}/`)}
       class="absolute inset-0 z-10 block"
       aria-label={`Открыть проект: ${project.title}`}
     >
@@ -63,7 +64,7 @@ const platformIconMap: Record<string, string> = {
           ))
         ) : (
           <img
-            src="/placeholder.jpeg"
+            src={url('/placeholder.jpeg')}
             alt={`${project.title} placeholder`}
             class="absolute inset-0 w-full h-full object-contain transition-all duration-1000 group-hover:scale-105"
           />
@@ -105,7 +106,7 @@ const platformIconMap: Record<string, string> = {
           </span>
         ))}
       </div>
-      <a href={`/projects/${project.slug}/`} class="block group/title">
+      <a href={url(`/projects/${project.slug}/`)} class="block group/title">
         <h3 class="text-xl font-heading font-bold text-maintext mt-2 group-hover/title:text-accent transition-colors">
           {project.title}
         </h3>
@@ -127,7 +128,7 @@ const platformIconMap: Record<string, string> = {
     <!-- Two actions -->
     <div class="flex gap-2 mt-1">
       <a
-        href={`/projects/${project.slug}/`}
+        href={url(`/projects/${project.slug}/`)}
         class="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-accent/20 text-accent/70 hover:text-accent hover:border-accent/60 hover:bg-accent/5 transition-all text-xs font-semibold tracking-wide"
       >
         Подробнее <Icon name="mdi:arrow-right" class="w-3.5 h-3.5" />

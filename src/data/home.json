@@ -6,7 +6,7 @@
   "description": "Привет, мир! Меня зовут Григорьев Дмитрий, и я - инженер. Специализируюсь в области разработки программируемых устройств. Помимо навыков написания программного кода, обладаю навыками проектирования моделей и схем устройств",
   "descriptionHtml": "Привет, мир! Меня зовут Григорьев Дмитрий, и я - <span class='text-accent font-bold'>инженер</span>. Специализируюсь в области разработки программируемых устройств. Помимо навыков написания программного кода, обладаю навыками проектирования моделей и схем устройств",
   "webpageTitle": "Григорьев Дмитрий | Ведущий инженер",
-  "resumeUrl": "public/Григорьев Дмитрий Евгеньевич - резюме.pdf",
+  "resumeUrl": "public/GrigorievDmitriy_resume.pdf",
 
   "_seo_comment": "SEO fields — update these along with your personal info for best search engine visibility.",
   "jobTitle": "Ведущий инженер",
@@ -14,7 +14,7 @@
   "siteUrl": "https://dimgrig.github.io/dimgrig",
   "lang": "ru",
   "twitterHandle": "",
-  "ogImageUrl": "/placeholder.jpeg",
+  "ogImageUrl": "placeholder.jpeg",
 
   "_comment": "Add your social links below. Leave the 'url' empty to hide the icon. Set 'showInContact' to true or false to control if it appears in the Contact section.",
   "socials": [

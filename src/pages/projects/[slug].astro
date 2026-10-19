@@ -6,6 +6,7 @@ import projects from '../../data/projects.json';
 import homeData from '../../data/home.json';
 import { resolveAssetImage } from '../../utils/images';
 import { getProjectCategories } from '../../utils/project-meta';
+import { url } from '../../utils/url';
 
 export async function getStaticPaths() {
   return projects
@@ -42,7 +43,7 @@ const validGallery = gallery.filter(Boolean) as { img: any; caption: string }[];
 >
   <article class="section-container max-w-5xl mx-auto px-4">
     <!-- Back link -->
-    <a href="/#projects" class="inline-flex items-center gap-2 text-accent/70 hover:text-accent text-sm mb-8 transition-colors">
+    <a href={url('/#projects')} class="inline-flex items-center gap-2 text-accent/70 hover:text-accent text-sm mb-8 transition-colors">
       <Icon name="mdi:arrow-left" class="w-4 h-4" />
       Назад к проектам
     </a>
