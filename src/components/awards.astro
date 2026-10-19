@@ -1,0 +1,369 @@
+---
+import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import awardsData from '../data/awards.json';
+import { resolveAssetImage } from '../utils/images';
+
+// Резолвим все картинки один раз
+const itemsWithImages = await Promise.all(
+  awardsData.items.map(async (item) => {
+    const img = await resolveAssetImage(item.image);
+    return img ? { ...item, img } : null;
+  })
+);
+const items = itemsWithImages.filter(Boolean) as Array<
+  typeof awardsData.items[number] & { img: any }
+>;
+---
+
+<section id="awards" class="section-container overflow-hidden">
+  <div class="container mx-auto">
+    <!-- Header -->
+    <div class="awards-header mb-10">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold text-maintext mb-2 flex items-center gap-4">
+        <span class="text-accent">/</span> Сертификаты и дипломы
+      </h2>
+      <p class="text-subtext font-body text-sm max-w-md">
+        Курсы, тесты, конференции и другие подтверждения квалификации.
+      </p>
+    </div>
+
+    <!-- Filter chips -->
+    <div class="flex flex-wrap gap-2 mb-8" id="awards-filters">
+      {awardsData.categories.map((cat, i) => (
+        <button
+          class={`awards-filter-btn ${i === 0 ? 'active' : ''}`}
+          data-filter={cat.id}
+        >
+          {cat.label}
+        </button>
+      ))}
+    </div>
+
+    <!-- Grid: masonry через CSS columns -->
+    <div
+      id="awards-grid"
+      class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 mb-8"
+    >
+      {items.map((item) => (
+        <button
+          type="button"
+          class="award-card group relative overflow-hidden rounded-xl border border-accent/10 bg-accent/5 hover:border-accent/40 transition-all w-full mb-4 break-inside-avoid"
+          data-id={item.id}
+          data-category={item.category}
+          aria-label={item.title}
+        >
+          <div class="bg-background/50">
+            <Image
+              src={item.img}
+              alt={item.title}
+              width={600}
+              format="webp"
+              quality={75}
+              loading="lazy"
+              class="w-full h-auto transition-transform duration-700 group-hover:scale-105"
+            />
+          </div>
+          <!-- Оверлей с подписью -->
+          <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+            <span class="text-maintext text-xs font-body leading-tight text-left">
+              {item.title}
+            </span>
+          </div>
+        </button>
+      ))}
+    </div>
+
+    <!-- See More -->
+    <div id="awards-see-more" class="hidden justify-center mb-8">
+      <button
+        id="awards-see-more-btn"
+        class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-accent/40 text-accent hover:bg-accent/10 transition"
+      >
+        <span>Показать все</span>
+        <Icon name="mdi:chevron-down" class="w-4 h-4" />
+      </button>
+    </div>
+
+    <!-- Empty state -->
+    <p id="awards-empty" class="hidden text-subtext text-sm text-center py-12">
+      В этой категории пока ничего нет.
+    </p>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<dialog
+  id="awards-lightbox"
+  class="bg-black/95 backdrop:bg-black/85 p-0 m-0 max-w-none max-h-none w-screen h-screen"
+>
+  <div class="relative w-full h-full flex items-center justify-center p-4">
+    <button
+      class="lb-close absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition flex items-center justify-center"
+      aria-label="Закрыть"
+    >
+      <Icon name="mdi:close" class="w-6 h-6" />
+    </button>
+    <button
+      class="lb-prev absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition flex items-center justify-center"
+      aria-label="Предыдущий"
+    >
+      <Icon name="mdi:chevron-left" class="w-8 h-8" />
+    </button>
+    <button
+      class="lb-next absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition flex items-center justify-center"
+      aria-label="Следующий"
+    >
+      <Icon name="mdi:chevron-right" class="w-8 h-8" />
+    </button>
+
+    <div class="flex flex-col items-center gap-4 max-w-full max-h-full">
+      <img
+        id="lb-image"
+        src=""
+        alt=""
+        class="max-w-[90vw] max-h-[80vh] object-contain rounded-lg"
+      />
+      <p id="lb-caption" class="text-white/80 text-sm text-center max-w-2xl"></p>
+      <p id="lb-counter" class="text-white/40 text-xs font-mono"></p>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .awards-header {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .awards-header.reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .award-card {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.3s;
+  }
+  .award-card.reveal {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .award-card.filtered-out,
+  .award-card.hidden-by-limit {
+    display: none !important;
+  }
+
+  .awards-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 0.35rem 0.9rem;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    color: color-mix(in srgb, var(--color-accent) 65%, transparent);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .awards-filter-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+  .awards-filter-btn.active {
+    background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  dialog#awards-lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.85);
+  }
+</style>
+
+<script>
+  function initAwards() {
+    const grid = document.getElementById('awards-grid');
+    const filtersWrap = document.getElementById('awards-filters');
+    const emptyMsg = document.getElementById('awards-empty');
+    const dialog = document.getElementById('awards-lightbox') as HTMLDialogElement | null;
+    if (!grid || !dialog) return;
+
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>('.award-card'));
+    const filterBtns = filtersWrap
+      ? Array.from(filtersWrap.querySelectorAll<HTMLButtonElement>('.awards-filter-btn'))
+      : [];
+
+    const lbImage = dialog.querySelector<HTMLImageElement>('#lb-image');
+    const lbCaption = dialog.querySelector<HTMLElement>('#lb-caption');
+    const lbCounter = dialog.querySelector<HTMLElement>('#lb-counter');
+
+    let currentFilter = 'all';
+    let visibleCards: HTMLElement[] = [...cards];
+    let currentIndex = 0;
+
+    const LIMIT = 5;                    // сколько показывать по умолчанию
+    let isExpanded = false;
+
+    const seeMoreWrap = document.getElementById('awards-see-more');
+    const seeMoreBtn = document.getElementById('awards-see-more-btn');
+
+    // === Filter ===
+    function applyFilter(filter) {
+      currentFilter = filter;
+      visibleCards = [];
+
+      let matchingCount = 0;
+
+      cards.forEach((card) => {
+        const cat = card.dataset.category ?? '';
+        const matches = filter === 'all' || cat === filter;
+
+        // Сброс классов
+        card.classList.remove('filtered-out', 'hidden-by-limit');
+
+        if (!matches) {
+          card.classList.add('filtered-out');
+          return;
+        }
+
+        matchingCount++;
+        visibleCards.push(card);
+
+        // Скрываем лишние, если не развёрнуто
+        if (!isExpanded && matchingCount > LIMIT) {
+          card.classList.add('hidden-by-limit');
+        }
+      });
+
+      filterBtns.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.filter === filter);
+      });
+
+      if (emptyMsg) {
+        emptyMsg.classList.toggle('hidden', visibleCards.length > 0);
+      }
+
+      // Показываем кнопку "Показать все", если есть что раскрывать
+      if (seeMoreWrap) {
+        const needMore = matchingCount > LIMIT && !isExpanded;
+        seeMoreWrap.classList.toggle('hidden', !needMore);
+        seeMoreWrap.classList.toggle('flex', needMore);
+      }
+    }
+
+    // При смене фильтра всегда сворачиваем обратно
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        isExpanded = false;
+        applyFilter(btn.dataset.filter ?? 'all');
+      });
+    });
+
+    // Кнопка "Показать все"
+    seeMoreBtn?.addEventListener('click', () => {
+      isExpanded = true;
+      applyFilter(currentFilter);
+      // После раскрытия — доскроллить чуть выше, чтобы не «прыгало»
+      seeMoreWrap?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    });
+
+    // === Reveal on scroll ===
+    const header = document.querySelector('.awards-header');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+
+          if (el.classList.contains('awards-header')) {
+            el.classList.add('reveal');
+            observer.unobserve(el);
+          } else if (el.classList.contains('award-card')) {
+            const i = cards.indexOf(el);
+            setTimeout(() => el.classList.add('reveal'), (i % 5) * 60);
+            observer.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    if (header) observer.observe(header);
+    cards.forEach((c) => observer.observe(c));
+
+    // === Lightbox ===
+    function openLightbox(card: HTMLElement) {
+      currentIndex = visibleCards.indexOf(card);
+      if (currentIndex === -1) return;
+      renderLightbox();
+      dialog.showModal();
+    }
+
+    function renderLightbox() {
+      const card = visibleCards[currentIndex];
+      if (!card) return;
+      const img = card.querySelector('img');
+      const title = card.getAttribute('aria-label') || img?.alt || '';
+
+      // Берём «полное» изображение: у Astro-Image это тот же src (уже webp).
+      // Для максимума — можно подставить data-full, если задашь его отдельно.
+      const fullSrc =
+        card.getAttribute('data-full') ||
+        img?.getAttribute('src') ||
+        '';
+
+      if (lbImage) {
+        lbImage.src = fullSrc;
+        lbImage.alt = img?.alt || '';
+      }
+      if (lbCaption) lbCaption.textContent = img?.alt || title;
+      if (lbCounter) {
+        lbCounter.textContent = `${currentIndex + 1} / ${visibleCards.length}`;
+      }
+    }
+
+    function next() {
+      currentIndex = (currentIndex + 1) % visibleCards.length;
+      renderLightbox();
+    }
+    function prev() {
+      currentIndex =
+        (currentIndex - 1 + visibleCards.length) % visibleCards.length;
+      renderLightbox();
+    }
+
+    cards.forEach((card) => {
+      card.addEventListener('click', () => openLightbox(card));
+    });
+
+    dialog.querySelector('.lb-close')?.addEventListener('click', () => dialog.close());
+    dialog.querySelector('.lb-next')?.addEventListener('click', next);
+    dialog.querySelector('.lb-prev')?.addEventListener('click', prev);
+
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+    });
+
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+
+    // Стартовое состояние фильтра
+    applyFilter('all');
+  }
+
+  initAwards();
+  document.addEventListener('astro:after-swap', initAwards);
+</script>

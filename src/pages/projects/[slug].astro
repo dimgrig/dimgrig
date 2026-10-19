@@ -1,0 +1,370 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import projects from '../../data/projects.json';
+import homeData from '../../data/home.json';
+import { resolveAssetImage } from '../../utils/images';
+import { getProjectCategories } from '../../utils/project-meta';
+
+export async function getStaticPaths() {
+  return projects
+    .filter((p) => p.slug)
+    .map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+const { project } = Astro.props as { project: any };
+const cats = getProjectCategories(project.category);
+
+// Плитки-превью для главной (не используется здесь, оставлено для справки)
+// const cardImages = await Promise.all(project.images.map((n: string) => resolveAssetImage(n)));
+
+// Галерея для карусели
+const gallery = project.gallery
+  ? await Promise.all(
+      project.gallery.map(async (g: { image: string; caption?: string }) => {
+        const img = await resolveAssetImage(g.image);
+        return img ? { img, caption: g.caption ?? '' } : null;
+      })
+    )
+  : [];
+
+const validGallery = gallery.filter(Boolean) as { img: any; caption: string }[];
+---
+
+<Layout
+  title={`${project.title} | ${homeData.name}`}
+  personName={homeData.name}
+  description={project.description}
+  siteUrl={homeData.siteUrl}
+  lang={homeData.lang}
+  socials={homeData.socials}
+>
+  <article class="section-container max-w-5xl mx-auto px-4">
+    <!-- Back link -->
+    <a href="/#projects" class="inline-flex items-center gap-2 text-accent/70 hover:text-accent text-sm mb-8 transition-colors">
+      <Icon name="mdi:arrow-left" class="w-4 h-4" />
+      Назад к проектам
+    </a>
+
+    <!-- Header -->
+    <h1 class="text-4xl md:text-5xl font-heading font-bold text-maintext mb-4">
+      {project.title}
+    </h1>
+    <div class="flex flex-wrap gap-2 mb-3">
+      {cats.map((c) => (
+        <span class={`inline-block text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full border ${c.badgeClass}`}>
+          {c.label}
+        </span>
+      ))}
+    </div>
+    <p class="text-subtext text-lg leading-relaxed mb-6">
+      {project.description}
+    </p>
+
+    <!-- Tech tags -->
+    {project.tech && project.tech.length > 0 && (
+      <div class="flex flex-wrap gap-2 mb-10">
+        {project.tech.map((t: string) => (
+          <span class="rounded-md text-xs px-3 py-1 bg-accent/5 border border-accent/10 text-accent/80">
+            {t}
+          </span>
+        ))}
+      </div>
+    )}
+
+    <!-- Sections -->
+    {project.sections && project.sections.length > 0 && (
+      <div class="space-y-8 mb-12">
+        {project.sections.map((s: any) => (
+          <section>
+            <h3 class="text-accent font-heading font-bold text-sm uppercase tracking-widest mb-3">
+              {s.title}
+            </h3>
+            {s.items && s.items.length > 0 && (
+              <ul class="list-disc list-inside text-subtext text-sm leading-relaxed space-y-1.5 marker:text-accent/60">
+                {s.items.map((item: string) => <li>{item}</li>)}
+              </ul>
+            )}
+            {s.text && (
+              <div class="text-subtext text-sm leading-relaxed whitespace-pre-line mt-3">
+                {s.text}
+              </div>
+            )}
+          </section>
+        ))}
+      </div>
+    )}
+
+    <!-- Gallery / Carousel -->
+    {validGallery.length > 0 && (
+      <section class="mb-10">
+        <h3 class="text-accent font-heading font-bold text-sm uppercase tracking-widest mb-4">
+          Галерея
+        </h3>
+
+        <div id="project-gallery" class="project-gallery relative bg-accent/5 border border-accent/10 rounded-2xl overflow-hidden">
+          <!-- Слайды -->
+          <div class="relative aspect-video bg-background/50">
+            {validGallery.map((slide, i) => (
+              <div
+                class="gallery-slide absolute inset-0 transition-opacity duration-500"
+                data-index={i}
+                style={i === 0 ? 'opacity:1' : 'opacity:0;pointer-events:none'}
+              >
+                <Image
+                  src={slide.img}
+                  alt={slide.caption || project.title}
+                  width={1600}
+                  format="webp"
+                  quality={85}
+                  loading="lazy"
+                  class="w-full h-full object-contain cursor-zoom-in"
+                  data-zoom-index={i}
+                />
+              </div>
+            ))}
+
+            <!-- Prev / Next -->
+            {validGallery.length > 1 && (
+              <>
+                <button
+                  class="gallery-prev absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-background/70 backdrop-blur-md border border-accent/20 text-accent hover:bg-accent/20 hover:border-accent/50 transition flex items-center justify-center"
+                  aria-label="Предыдущий слайд"
+                >
+                  <Icon name="mdi:chevron-left" class="w-6 h-6" />
+                </button>
+                <button
+                  class="gallery-next absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-background/70 backdrop-blur-md border border-accent/20 text-accent hover:bg-accent/20 hover:border-accent/50 transition flex items-center justify-center"
+                  aria-label="Следующий слайд"
+                >
+                  <Icon name="mdi:chevron-right" class="w-6 h-6" />
+                </button>
+              </>
+            )}
+          </div>
+
+          <!-- Caption + counter -->
+          <div class="flex items-center justify-between px-4 py-3 border-t border-accent/10">
+            <p class="gallery-caption text-subtext text-sm font-body">
+              {validGallery[0].caption}
+            </p>
+            {validGallery.length > 1 && (
+              <span class="gallery-counter font-mono text-xs text-accent/60">
+                <span class="gallery-current">1</span> / {validGallery.length}
+              </span>
+            )}
+          </div>
+
+          <!-- Thumbnails -->
+          {validGallery.length > 1 && (
+            <div class="gallery-thumbs flex gap-2 overflow-x-auto p-3 border-t border-accent/10">
+              {validGallery.map((slide, i) => (
+                <button
+                  class={`gallery-thumb shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition ${
+                    i === 0 ? 'border-accent' : 'border-transparent opacity-60 hover:opacity-100'
+                  }`}
+                  data-thumb-index={i}
+                  aria-label={`Слайд ${i + 1}`}
+                >
+                  <Image
+                    src={slide.img}
+                    alt=""
+                    width={128}
+                    height={128}
+                    format="webp"
+                    quality={70}
+                    class="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {project.galleryNote && (
+          <p class="text-textrain text-xs mt-3 font-body">
+            {project.galleryNote}
+          </p>
+        )}
+      </section>
+    )}
+
+    <!-- External link -->
+    {project.link && (
+      <a
+        href={project.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-accent/40 text-accent hover:bg-accent/10 transition"
+      >
+        Открыть проект
+        <Icon name="mdi:open-in-new" class="w-4 h-4" />
+      </a>
+    )}
+  </article>
+
+  <!-- Lightbox -->
+  <dialog id="gallery-lightbox" class="bg-black/95 backdrop:bg-black/80 p-0 m-0 max-w-none max-h-none w-screen h-screen">
+    <div class="relative w-full h-full flex items-center justify-center p-4">
+      <button
+        class="lightbox-close absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition flex items-center justify-center"
+        aria-label="Закрыть"
+      >
+        <Icon name="mdi:close" class="w-6 h-6" />
+      </button>
+      <button
+        class="lightbox-prev absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition flex items-center justify-center"
+        aria-label="Предыдущее изображение"
+      >
+        <Icon name="mdi:chevron-left" class="w-8 h-8" />
+      </button>
+      <button
+        class="lightbox-next absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition flex items-center justify-center"
+        aria-label="Следующее изображение"
+      >
+        <Icon name="mdi:chevron-right" class="w-8 h-8" />
+      </button>
+
+      <div class="flex flex-col items-center gap-4 max-w-full max-h-full">
+        {validGallery.map((slide, i) => (
+          <Image
+            src={slide.img}
+            alt={slide.caption || project.title}
+            width={1920}
+            format="webp"
+            quality={90}
+            class={`lightbox-image ${i === 0 ? '' : 'hidden'} max-w-[90vw] max-h-[80vh] object-contain`}
+            data-lightbox-index={i}
+          />
+        ))}
+        <p class="lightbox-caption text-white/80 text-sm text-center max-w-2xl">
+          {validGallery[0].caption}
+        </p>
+      </div>
+    </div>
+  </dialog>
+</Layout>
+
+<script>
+  function initProjectGallery() {
+    const root = document.getElementById('project-gallery');
+    if (!root) return;
+
+    const slides = root.querySelectorAll<HTMLElement>('.gallery-slide');
+    const thumbs = root.querySelectorAll<HTMLElement>('.gallery-thumb');
+    const captionEl = root.querySelector<HTMLElement>('.gallery-caption');
+    const counterEl = root.querySelector<HTMLElement>('.gallery-current');
+    const prevBtn = root.querySelector<HTMLElement>('.gallery-prev');
+    const nextBtn = root.querySelector<HTMLElement>('.gallery-next');
+    const captions = Array.from(slides).map((_, i) =>
+      root.querySelector<HTMLElement>(`.gallery-thumb[data-thumb-index="${i}"]`)?.getAttribute('aria-label') || ''
+    );
+
+    // Соберём подписи из скрытого источника (из alt у больших изображений)
+    const realCaptions = Array.from(slides).map((s) =>
+      s.querySelector('img')?.getAttribute('alt') || ''
+    );
+
+    let current = 0;
+
+    function show(index: number) {
+      current = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, i) => {
+        slide.style.opacity = i === current ? '1' : '0';
+        slide.style.pointerEvents = i === current ? 'auto' : 'none';
+      });
+
+      thumbs.forEach((thumb, i) => {
+        if (i === current) {
+          thumb.classList.add('border-accent');
+          thumb.classList.remove('border-transparent', 'opacity-60');
+          thumb.classList.add('opacity-100');
+        } else {
+          thumb.classList.remove('border-accent');
+          thumb.classList.add('border-transparent', 'opacity-60');
+          thumb.classList.remove('opacity-100');
+        }
+      });
+
+      if (captionEl) captionEl.textContent = realCaptions[current] || '';
+      if (counterEl) counterEl.textContent = String(current + 1);
+    }
+
+    prevBtn?.addEventListener('click', () => show(current - 1));
+    nextBtn?.addEventListener('click', () => show(current + 1));
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        const i = Number(thumb.dataset.thumbIndex);
+        show(i);
+      });
+    });
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      const dialog = document.getElementById('gallery-lightbox') as HTMLDialogElement | null;
+      if (dialog?.open) return; // стрелки в лайтбоксе обрабатываются отдельно
+      if (e.key === 'ArrowLeft') show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
+
+    // === Lightbox ===
+    const dialog = document.getElementById('gallery-lightbox') as HTMLDialogElement | null;
+    if (!dialog) return;
+
+    const lightboxImages = dialog.querySelectorAll<HTMLElement>('.lightbox-image');
+    const lightboxCaption = dialog.querySelector<HTMLElement>('.lightbox-caption');
+    let lbIndex = 0;
+
+    function showLightbox(index: number) {
+      lbIndex = (index + lightboxImages.length) % lightboxImages.length;
+      lightboxImages.forEach((img, i) => {
+        img.classList.toggle('hidden', i !== lbIndex);
+      });
+      if (lightboxCaption) lightboxCaption.textContent = realCaptions[lbIndex] || '';
+    }
+
+    slides.forEach((slide) => {
+      const img = slide.querySelector('img');
+      img?.addEventListener('click', () => {
+        showLightbox(current);
+        dialog.showModal();
+      });
+    });
+
+    dialog.querySelector('.lightbox-close')?.addEventListener('click', () => dialog.close());
+    dialog.querySelector('.lightbox-prev')?.addEventListener('click', () => showLightbox(lbIndex - 1));
+    dialog.querySelector('.lightbox-next')?.addEventListener('click', () => showLightbox(lbIndex + 1));
+
+    // Клик по фону (не по изображению) закрывает
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+
+    // Стрелки внутри лайтбокса
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') showLightbox(lbIndex - 1);
+      if (e.key === 'ArrowRight') showLightbox(lbIndex + 1);
+    });
+  }
+
+  initProjectGallery();
+  document.addEventListener('astro:after-swap', initProjectGallery);
+</script>
+
+<style>
+  /* Плавное появление изображения в лайтбоксе */
+  .lightbox-image {
+    animation: lbFade 0.25s ease-out;
+  }
+  @keyframes lbFade {
+    from { opacity: 0; transform: scale(0.98); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* Скрываем стандартную обводку dialog */
+  dialog#gallery-lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.85);
+  }
+</style>

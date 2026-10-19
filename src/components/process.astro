@@ -1,0 +1,153 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Step {
+  n: string;
+  title: string;
+  desc: string;
+  icon: string;
+}
+
+const steps: Step[] = [
+  { n: '01', title: 'Идея',       icon: 'mdi:lightbulb-on-outline',  desc: 'Постановка задачи' },
+  { n: '02', title: 'ТЗ',         icon: 'mdi:pencil-outline',        desc: 'Техническое задание' },
+  { n: '03', title: 'Проект',     icon: 'mdi:file-document-outline', desc: 'Проектирование и макетирования' },
+  { n: '04', title: 'Разработка', icon: 'mdi:chip',                  desc: 'Схемы и документация' },
+  { n: '05', title: 'Код',        icon: 'mdi:code-tags',             desc: 'Прошивка и ПО' },
+  { n: '06', title: 'Отладка',    icon: 'mdi:bug-outline',           desc: 'Тесты и испытания' },
+  { n: '07', title: 'Запуск',     icon: 'mdi:rocket-launch-outline', desc: 'Серийное производство' },
+];
+---
+
+<section id="process" class="section-container overflow-hidden">
+  <div class="container mx-auto">
+    <!-- Header -->
+    <div class="process-header mb-14">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold text-maintext mb-2 flex items-center gap-4">
+        <span class="text-accent">/</span> Процесс разработки
+      </h2>
+      <p class="text-subtext font-body text-sm max-w-md">
+        От идеи до запуска — процесс разработки устройств и программного обеспечения
+      </p>
+    </div>
+
+    <!-- Steps -->
+    <div class="relative">
+      <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 lg:gap-2">
+        {steps.map((step) => (
+          <div class="process-step group relative flex lg:flex-col items-center lg:justify-start gap-4 lg:gap-3 lg:text-center">
+            <!-- Icon + number -->
+            <div class="relative shrink-0">
+              <span class="absolute -top-2 -right-2 text-[10px] font-mono font-bold text-accent/40 tracking-wider">
+                {step.n}
+              </span>
+              <div class="w-16 h-16 rounded-2xl border border-accent/20 bg-accent/5 flex items-center justify-center transition-all duration-500 group-hover:border-accent/60 group-hover:bg-accent/15 group-hover:shadow-[0_0_25px_color-mix(in_srgb,var(--color-accent)_25%,transparent)]">
+                <Icon
+                  name={step.icon}
+                  class="w-7 h-7 text-accent/80 group-hover:text-accent transition-colors duration-300"
+                />
+              </div>
+            </div>
+
+            <!-- Title + description -->
+            <div class="text-left lg:text-center min-w-0">
+              <h3 class="text-maintext font-heading font-bold text-sm">{step.title}</h3>
+              <p class="text-subtext text-xs lg:text-[10px] leading-snug mt-0.5">{step.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .process-header {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .process-header.reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .process-step {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .process-step.reveal {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Коннекторы между шагами (только на lg) */
+@media (min-width: 1024px) {
+  .process-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 2rem;                            /* центр иконки (w-16 = 4rem) */
+    left: calc(50% + 2.5rem);             /* правый край иконки + 8px */
+    right: calc(-50% + 2rem);             /* до левого края иконки следующего − 8px */
+    height: 1px;
+    background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    pointer-events: none;
+    z-index: 0;
+    /* лёгкое появление вместе с шагом */
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .process-step.reveal:not(:last-child)::after {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1023px) {
+  .process-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 2rem;                    /* центр иконки по горизонтали */
+    top: 4.5rem;                   /* сразу под иконкой (w-16 + gap) */
+    bottom: -1rem;                 /* до верхнего края следующего шага */
+    width: 1px;
+    background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+</style>
+
+<script>
+  function initProcessReveal() {
+    const header = document.querySelector('.process-header');
+    const steps = document.querySelectorAll<HTMLElement>('.process-step');
+    const stepIndexMap = new Map<Element, number>();
+    steps.forEach((s, i) => stepIndexMap.set(s, i));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+
+          if (el.classList.contains('process-header')) {
+            el.classList.add('reveal');
+          } else if (el.classList.contains('process-step')) {
+            const i = stepIndexMap.get(el) ?? 0;
+            setTimeout(() => el.classList.add('reveal'), i * 100);
+          }
+          observer.unobserve(el);
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    if (header) observer.observe(header);
+    steps.forEach((s) => observer.observe(s));
+  }
+
+  initProcessReveal();
+  document.addEventListener('astro:after-swap', initProcessReveal);
+</script>

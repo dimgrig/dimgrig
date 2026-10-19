@@ -1,0 +1,179 @@
+@import "tailwindcss";
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource-variable/inter';
+
+@theme {
+  /* Indirection через --theme-*: значения определяются в @layer base
+     и переключаются атрибутом data-theme. Hex-значения здесь НЕ задаём —
+     иначе Tailwind встроит их в opacity-модификаторы и сломает тему. */
+  --color-background: var(--theme-bg);
+  --color-accent:     var(--theme-accent);
+  --color-maintext:   var(--theme-text);
+  --color-subtext:    var(--theme-subtle);
+  --color-textrain:   var(--theme-rain);
+
+  /* Fonts */
+  --font-heading: "Space Grotesk Variable", sans-serif;
+  --font-body: "Inter Variable", sans-serif;
+
+  /* Custom Animations */
+  --animate-fall: fall linear forwards;
+  --animate-bounce-twice: double-bounce-pause 5.6s ease-in-out infinite;
+
+  @keyframes fall {
+    0% { transform: translateY(-5vh); opacity: 0; }
+    10% { opacity: 0.5; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(90vh); opacity: 0; }
+  }
+
+  @keyframes double-bounce-pause {
+    0%, 5.3%, 10.7%, 100% { transform: translateY(0); }
+    2.6% { transform: translateY(-8px); }
+    8% { transform: translateY(-8px); }
+  }
+
+  @keyframes launch {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+  }
+}
+
+@layer base {
+  /* Fallback — используется до применения data-theme */
+  :root {
+    --theme-bg:     #0F0D29;
+    --theme-accent: #A78BFA;
+    --theme-text:   #FFFFFF;
+    --theme-subtle: #b2bed1;
+    --theme-rain:   #7d7b9c;
+  }
+
+  /* Default Theme - Dark */
+  :root[data-theme="default-dark"] {
+    --theme-bg:     #0F0D29;
+    --theme-accent: #A78BFA;
+    --theme-text:   #FFFFFF;
+    --theme-subtle: #b2bed1;
+    --theme-rain:   #7d7b9c;
+  }
+
+  /* Default Theme - Light */
+  :root[data-theme="default-light"] {
+    --theme-bg:     #F5F3FF;
+    --theme-accent: #7C3AED;
+    --theme-text:   #1E1B4B;
+    --theme-subtle: #4B5563;
+    --theme-rain:   #97a7dc;
+  }
+
+  /* Strategic Architect - Dark */
+  :root[data-theme="strategic-dark"] {
+    --theme-bg:     #0F172A;
+    --theme-accent: #38BDF8;
+    --theme-text:   #F1F5F9;
+    --theme-subtle: #a0adbf;
+    --theme-rain:   #4d5b6f;
+  }
+
+  /* Strategic Architect - Light */
+  :root[data-theme="strategic-light"] {
+    --theme-bg:     #F8FAFC;
+    --theme-accent: #0284C7;
+    --theme-text:   #0F172A;
+    --theme-subtle: #475569;
+    --theme-rain:   #9eb9da;
+  }
+
+  /* Modern Innovator - Dark */
+  :root[data-theme="innovator-dark"] {
+    --theme-bg:     #0B0F0E;
+    --theme-accent: #BEF264;
+    --theme-text:   #FFFFFF;
+    --theme-subtle: #c4c3c3;
+    --theme-rain:   #567b6c;
+  }
+
+  /* Modern Innovator - Light */
+  :root[data-theme="innovator-light"] {
+    --theme-bg:     #F0FDF4;
+    --theme-accent: #06aa73;
+    --theme-text:   #064E3B;
+    --theme-subtle: #4B5563;
+    --theme-rain:   #7fbc9e;
+  }
+
+  /* Executive Minimalist - Dark */
+  :root[data-theme="executive-dark"] {
+    --theme-bg:     #121212;
+    --theme-accent: #EAB308;
+    --theme-text:   #FAFAF9;
+    --theme-subtle: #dad0c9;
+    --theme-rain:   #777271;
+  }
+
+  /* Executive Minimalist - Light */
+  :root[data-theme="executive-light"] {
+    --theme-bg:     #FCF8F1;
+    --theme-accent: #B45309;
+    --theme-text:   #1C1917;
+    --theme-subtle: #71665f;
+    --theme-rain:   #e2a787;
+  }
+
+  /* Core Element Styles */
+  *::selection {
+    @apply bg-accent text-background;
+  }
+
+  body {
+    @apply font-body antialiased text-maintext;
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--theme-bg), black 8%) 0%,
+      var(--theme-bg) 50%,
+      color-mix(in oklab, var(--theme-bg), white 8%) 100%
+    );
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply py-12 md:py-20 px-4 md:px-0;
+  }
+
+  .falling-letter {
+    @apply absolute font-heading font-extralight select-none pointer-events-none leading-none;
+    animation: fall linear forwards;
+  }
+
+  .launching {
+    animation: launch 0.5s ease-in forwards;
+  }
+}
+
+/* Custom Scrollbar for a cleaner look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background-color: var(--theme-bg);
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-color: color-mix(in srgb, var(--theme-accent), transparent 50%);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--theme-accent), transparent 25%);
+}
+
+/* Accessibility: respect OS-level "Reduce Motion" preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

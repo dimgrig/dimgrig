@@ -1,0 +1,263 @@
+---
+import { Icon } from 'astro-icon/components';
+import ProjectCard from './project-card.astro';
+import projectsData from '../data/projects.json';
+
+interface Filter {
+  id: string;
+  label: string;
+}
+
+const filters: Filter[] = [
+  { id: 'all',      label: 'Все' },
+  { id: 'systems',  label: 'Комплексы' },
+  { id: 'devices',  label: 'Устройства' },
+  { id: 'software', label: 'ПО' },
+];
+---
+
+<section id="projects" class="section-container overflow-hidden">
+  <div class="container mx-auto">
+    <div class="project-header flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 pb-8">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-heading font-bold text-maintext mb-2 flex items-center gap-4">
+          <span class="text-accent">/</span> Проекты
+        </h2>
+        <p class="text-subtext font-body text-sm max-w-md">
+          Подборка выполненных проектов, приложений и устройств
+        </p>
+      </div>
+
+      <!-- Filter chips -->
+      <div class="flex gap-2 flex-wrap shrink-0">
+        {filters.map((f, i) => (
+          <button
+            class={`project-filter-btn ${i === 0 ? 'active' : ''}`}
+            data-filter={f.id}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div id="projects-grid" class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {projectsData.map((project) => (
+        <div class="project-item-wrap" data-categories={(Array.isArray(project.category) ? project.category : [project.category]).join(' ')}>
+          <ProjectCard project={project} />
+        </div>
+      ))}
+    </div>
+
+    <!-- See More -->
+    <div id="projects-see-more" class="hidden justify-center mt-10">
+      <button
+        id="projects-see-more-btn"
+        class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-accent/40 text-accent hover:bg-accent/10 transition"
+      >
+        <span>Показать все</span>
+        <Icon name="mdi:chevron-down" class="w-4 h-4" />
+      </button>
+    </div>
+
+    <!-- Empty state -->
+    <p id="projects-empty" class="hidden text-subtext text-sm text-center py-12">
+      В этой категории пока нет проектов.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* Header */
+  .project-header {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .project-header.reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Card wrapper */
+  .project-item-wrap {
+    display: block;
+  }
+  .project-item-wrap.filtered-out,
+  .project-item-wrap.hidden-by-limit {
+    display: none !important;
+  }
+
+  /* Blurred — последняя видимая, намекает что есть ещё */
+  .project-item-wrap.blurred-out {
+    opacity: 0.5 !important;
+    filter: blur(2px);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Reveal animation */
+  .project-item-wrap .project-card {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .project-item-wrap .project-card.reveal {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Filter buttons — стиль как в career */
+  .project-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 0.35rem 0.9rem;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    color: color-mix(in srgb, var(--color-accent) 65%, transparent);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .project-filter-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+  .project-filter-btn.active {
+    background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+</style>
+
+<script>
+  const PROJECTS_LIMIT = 5;
+
+  function initProjectReveal() {
+    const header = document.querySelector('.project-header');
+    const cards = document.querySelectorAll<HTMLElement>('.project-card');
+    const cardIndexMap = new Map<Element, number>();
+    cards.forEach((card, i) => cardIndexMap.set(card, i));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const target = entry.target as HTMLElement;
+
+          if (target.classList.contains('project-header')) {
+            target.classList.add('reveal');
+          } else if (target.classList.contains('project-card')) {
+            const i = cardIndexMap.get(target) ?? 0;
+            setTimeout(() => target.classList.add('reveal'), (i % 3) * 150);
+          }
+          observer.unobserve(target);
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -10px 0px' }
+    );
+
+    if (header) observer.observe(header);
+    cards.forEach((c) => observer.observe(c));
+  }
+
+  function initProjectsFilters() {
+    const grid = document.getElementById('projects-grid');
+    const seeMoreWrap = document.getElementById('projects-see-more');
+    const seeMoreBtn = document.getElementById('projects-see-more-btn');
+    const emptyMsg = document.getElementById('projects-empty');
+    if (!grid) return;
+
+    const items = Array.from(grid.querySelectorAll<HTMLElement>('.project-item-wrap'));
+    const filterBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('.project-filter-btn'));
+
+    let currentFilter = 'all';
+    let isExpanded = false;
+
+    function updateView() {
+      let matchingCount = 0;
+
+      items.forEach((item) => {
+        const cats = (item.dataset.categories ?? '').split(/\s+/).filter(Boolean);
+        const matches = currentFilter === 'all' || cats.includes(currentFilter);
+
+        item.classList.remove('filtered-out', 'hidden-by-limit', 'blurred-out');
+
+        if (!matches) {
+          item.classList.add('filtered-out');
+          return;
+        }
+
+        matchingCount++;
+
+        if (!isExpanded) {
+          if (matchingCount > PROJECTS_LIMIT + 1) {
+            // Слишком далеко — скрываем полностью
+            item.classList.add('hidden-by-limit');
+          } else if (matchingCount === PROJECTS_LIMIT + 1) {
+            // Первый после лимита — размываем, намёк что есть ещё
+            item.classList.add('blurred-out');
+          }
+          // matchingCount <= PROJECTS_LIMIT — показываем как обычно
+        }
+
+        // Показываем — сразу reveal, чтобы не ждало observer'а
+        const card = item.querySelector('.project-card');
+        card?.classList.add('reveal');
+      });
+
+      // Кнопки фильтров
+      filterBtns.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.filter === currentFilter);
+      });
+
+      // Кнопка "Показать все"
+      if (seeMoreWrap) {
+        const needMore = matchingCount > PROJECTS_LIMIT && !isExpanded;
+        seeMoreWrap.classList.toggle('hidden', !needMore);
+        seeMoreWrap.classList.toggle('flex', needMore);
+      }
+
+      // Empty state
+      if (emptyMsg) {
+        emptyMsg.classList.toggle('hidden', matchingCount > 0);
+      }
+    }
+
+    filterBtns.forEach((btn) => {
+      if (btn.dataset.bound === '1') return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        currentFilter = btn.dataset.filter ?? 'all';
+        isExpanded = false; // при смене фильтра сворачиваем обратно
+        updateView();
+      });
+    });
+
+    if (seeMoreBtn && seeMoreBtn.dataset.bound !== '1') {
+      seeMoreBtn.dataset.bound = '1';
+      seeMoreBtn.addEventListener('click', () => {
+        isExpanded = true;
+        updateView();
+      });
+    }
+
+    updateView();
+  }
+
+  function initProjects() {
+    initProjectReveal();
+    initProjectsFilters();
+  }
+
+  initProjects();
+  document.addEventListener('astro:after-swap', initProjects);
+</script>

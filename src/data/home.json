@@ -1,0 +1,50 @@
+{
+  "name": "Григорьев Дмитрий",
+  "photoUrl": "photo.png",
+  "location": "Россия, Москва",
+  "availability": "",
+  "description": "Привет, мир! Меня зовут Григорьев Дмитрий, и я - инженер. Специализируюсь в области разработки программируемых устройств. Помимо навыков написания программного кода, обладаю навыками проектирования моделей и схем устройств",
+  "descriptionHtml": "Привет, мир! Меня зовут Григорьев Дмитрий, и я - <span class='text-accent font-bold'>инженер</span>. Специализируюсь в области разработки программируемых устройств. Помимо навыков написания программного кода, обладаю навыками проектирования моделей и схем устройств",
+  "webpageTitle": "Григорьев Дмитрий | Ведущий инженер",
+  "resumeUrl": "public/Григорьев Дмитрий Евгеньевич - резюме.pdf",
+
+  "_seo_comment": "SEO fields — update these along with your personal info for best search engine visibility.",
+  "jobTitle": "Ведущий инженер",
+  "keywords": "Григорьев Дмитрий, ведущий инженер, разработчик, C++, Qt, stm32, резюме, визитка",
+  "siteUrl": "https://dimgrig.github.io/dimgrig",
+  "lang": "ru",
+  "twitterHandle": "",
+  "ogImageUrl": "/placeholder.jpeg",
+
+  "_comment": "Add your social links below. Leave the 'url' empty to hide the icon. Set 'showInContact' to true or false to control if it appears in the Contact section.",
+  "socials": [
+    {
+      "name": "Email",
+      "url": "mailto:dim_grig@mail.ru",
+      "icon": "mdi:email",
+      "label": "Отправить письмо",
+      "showInContact": true
+    },
+    {
+      "name": "Telegram",
+      "url": "https://t.me/dim_grigoriev",
+      "icon": "mdi:telegram",
+      "label": "Отправить сообщение",
+      "showInContact": true
+    },
+    {
+      "name": "WhatsApp",
+      "url": "https://wa.me/dim_grig",
+      "icon": "mdi:whatsapp",
+      "label": "Отправить сообщение",
+      "showInContact": true
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com/dimgrig",
+      "icon": "mdi:github",
+      "label": "Перейти в профиль",
+      "showInContact": true
+    }    
+  ]
+}

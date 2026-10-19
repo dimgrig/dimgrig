@@ -1,0 +1,236 @@
+{
+  "categories": [
+    { "id": "all",         "label": "Все" },
+    { "id": "other",       "label": "Разное" },
+    { "id": "conference",  "label": "Конференции" },
+    { "id": "geekbrains",  "label": "GeekBrains" },
+    { "id": "sololearn",   "label": "Sololearn" },
+    { "id": "iek",         "label": "IEK" }
+  ],
+  "items": [
+    {
+      "id": "other-ni-labview-basics-1",
+      "category": "other",
+      "title": "NI LabVIEW Basics I",
+      "image": "diploma/NI LabVIEW Basics I.jpg"
+    },
+    {
+      "id": "other-ni-labview-basics-2",
+      "category": "other",
+      "title": "NI LabVIEW Basics II",
+      "image": "diploma/NI LabVIEW Basics II.jpg"
+    },
+    {
+      "id": "other-ni-labview-daq",
+      "category": "other",
+      "title": "NI LabVIEW DAQ",
+      "image": "diploma/NI LabVIEW DAQ.jpg"
+    },
+    {
+      "id": "other-autocad",
+      "category": "other",
+      "title": "AutoCAD",
+      "image": "diploma/AutoCAD.jpg"
+    },
+    {
+      "id": "other-sktbe",
+      "category": "other",
+      "title": "Грамота ОАО «СКТБЭ»",
+      "image": "diploma/sktbe.jpg"
+    },
+    {
+      "id": "gb-test-basic",
+      "category": "geekbrains",
+      "title": "Тест Основы",
+      "image": "diploma/geekbrains/Test Basic.jpg"
+    },
+    {
+      "id": "gb-test-cpp",
+      "category": "geekbrains",
+      "title": "Тест С++",
+      "image": "diploma/geekbrains/Test C++.jpg"
+    },
+    {
+      "id": "gb-test-python",
+      "category": "geekbrains",
+      "title": "Тест Python",
+      "image": "diploma/geekbrains/Test Python.jpg"
+    },
+    {
+      "id": "gb-test-python-middle",
+      "category": "geekbrains",
+      "title": "Тест Python (средний)",
+      "image": "diploma/geekbrains/Test Python middle.jpg"
+    },
+    {
+      "id": "gb-test-django",
+      "category": "geekbrains",
+      "title": "Тест Django",
+      "image": "diploma/geekbrains/Test Django.jpg"
+    },
+    {
+      "id": "gb-test-html-css",
+      "category": "geekbrains",
+      "title": "Тест HTML/CSS",
+      "image": "diploma/geekbrains/Test HTML-CSS.jpg"
+    },
+    {
+      "id": "gb-test-html-css-middle",
+      "category": "geekbrains",
+      "title": "Тест HTML/CSS (средний)",
+      "image": "diploma/geekbrains/Test HTML-CSS middle.jpg"
+    },
+    {
+      "id": "gb-test-javascript",
+      "category": "geekbrains",
+      "title": "Тест JavaScript",
+      "image": "diploma/geekbrains/Test JavaScript.jpg"
+    },
+    {
+      "id": "gb-test-javascript-middle",
+      "category": "geekbrains",
+      "title": "Тест JavaScript (средний)",
+      "image": "diploma/geekbrains/Test JavaScript middle.jpg"
+    },
+    {
+      "id": "gb-test-web-design",
+      "category": "geekbrains",
+      "title": "Тест WEB-дизайн",
+      "image": "diploma/geekbrains/Test Web design.jpg"
+    },
+    {
+      "id": "gb-course-c",
+      "category": "geekbrains",
+      "title": "Курс C",
+      "image": "diploma/geekbrains/Course C.jpg"
+    },
+    {
+      "id": "gb-course-python",
+      "category": "geekbrains",
+      "title": "Курс Python",
+      "image": "diploma/geekbrains/Course Phyton.jpg"
+    },
+    {
+      "id": "gb-intensive-python",
+      "category": "geekbrains",
+      "title": "Интенсив Python",
+      "image": "diploma/geekbrains/intensive course Python.jpg"
+    },
+    {
+      "id": "gb-course-git",
+      "category": "geekbrains",
+      "title": "Курс Git",
+      "image": "diploma/geekbrains/Course Git.jpg"
+    },
+
+    {
+      "id": "sl-cpp",
+      "category": "sololearn",
+      "title": "C++ Tutorial",
+      "image": "diploma/sololearn/C++ Tutorial course.jpg"
+    },
+    {
+      "id": "sl-python",
+      "category": "sololearn",
+      "title": "Python 3 Tutorial",
+      "image": "diploma/sololearn/Python 3 Tutorial course.jpg"
+    },
+    {
+      "id": "sl-html",
+      "category": "sololearn",
+      "title": "HTML Fundamentals",
+      "image": "diploma/sololearn/HTML Fundamentals course.jpg"
+    },
+    {
+      "id": "sl-css",
+      "category": "sololearn",
+      "title": "CSS Fundamentals",
+      "image": "diploma/sololearn/CSS Fundamentals course.jpg"
+    },
+    {
+      "id": "sl-js",
+      "category": "sololearn",
+      "title": "JavaScript Tutorial",
+      "image": "diploma/sololearn/js Tutorial course.jpg"
+    },
+    {
+      "id": "sl-jquery",
+      "category": "sololearn",
+      "title": "jQuery Tutorial",
+      "image": "diploma/sololearn/jQuery Tutorial course.jpg"
+    },
+
+    {
+      "id": "conf-rntores",
+      "category": "conference",
+      "title": "Грамота РНТОРЭС",
+      "image": "diploma/RNTORES.jpg"
+    },
+    {
+      "id": "conf-mpei",
+      "category": "conference",
+      "title": "Почетный диплом НИУ «МЭИ»",
+      "image": "diploma/MPEI.jpg"
+    },
+    {
+      "id": "conf-maks-2015-1",
+      "category": "conference",
+      "title": "МАКС-2015 (1)",
+      "image": "diploma/MAKS-2015 (1).jpeg"
+    },
+    {
+      "id": "conf-maks-2015-2",
+      "category": "conference",
+      "title": "МАКС-2015 (2)",
+      "image": "diploma/MAKS-2015 (2).jpeg"
+    },
+    {
+      "id": "iek-3510",
+      "category": "iek",
+      "title": "3510 Экспресс-курс MasterSCADA 4D",
+      "image": "diploma/iek/3510.jpg"
+    },
+    {
+      "id": "iek-3105",
+      "category": "iek",
+      "title": "3105 Программируемые логические контроллеры PLC-W",
+      "image": "diploma/iek/3105.jpg"
+    },
+    {
+      "id": "iek-3511",
+      "category": "iek",
+      "title": "3511 Основы работы с контроллером ONI в MasterSCADA 4D",
+      "image": "diploma/iek/3511.jpg"
+    },
+    {
+      "id": "iek-3516",
+      "category": "iek",
+      "title": "3516 MasterSCADA 4D RT в режиме SLAVE. Базовый курс",
+      "image": "diploma/iek/3516.jpg"
+    },
+    {
+      "id": "iek-3520",
+      "category": "iek",
+      "title": "3520 Получение данных по протоколам. Базовый курс",
+      "image": "diploma/iek/3520.jpg"
+    },
+    {
+      "id": "iek-0001",
+      "category": "iek",
+      "title": "0001 Основы электротехники (Базовый курс)",
+      "image": "diploma/iek/0001.jpg"
+    },
+    {
+      "id": "iek-0005",
+      "category": "iek",
+      "title": "0005 Модульное оборудование (Базовый курс)",
+      "image": "diploma/iek/0005.jpg"
+    },
+    {
+      "id": "iek-3001",
+      "category": "iek",
+      "title": "3001 Основы АСУ ТП (Базовый курс)",
+      "image": "diploma/iek/3001.jpg"
+    }
+  ]
+}

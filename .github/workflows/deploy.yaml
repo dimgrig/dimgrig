@@ -1,0 +1,40 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Запускать workflow при каждом пуше в ветку `main`
+  push:
+    branches: [ main ]
+  # Позволяет запускать workflow вручную из вкладки Actions
+  workflow_dispatch:
+
+# Разрешения, необходимые для деплоя на GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Разрешаем только один одновременный деплой
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository
+        uses: actions/checkout@v7
+      - name: Install, build, and upload your site
+        uses: withastro/action@v6
+        # с опциями можно ознакомиться здесь: https://github.com/withastro/action
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

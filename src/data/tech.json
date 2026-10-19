@@ -1,0 +1,71 @@
+{
+  "categories": [
+    {
+      "title": "Программирование",
+      "skills": [
+        { "name": "C", "level": 3, "icon": "skill-icons:c" },
+        { "name": "C++", "level": 3, "icon": "skill-icons:cpp" },
+        { "name": "Qt", "level": 3, "icon": "skill-icons:qt-light" },
+        { "name": "Python", "level": 2, "icon": "skill-icons:python-light" }
+      ]
+    },
+    {
+      "title": "Устройства и протоколы",
+      "skills": [
+        { "name": "stm32", "level": 3, "icon": "thesvg-color:stmicroelectronics" },
+        { "name": "ПЛК", "level": 2, "icon": "/icons/plc.png" },
+        { "name": "RPI/SBC", "level": 3, "icon": "skill-icons:raspberrypi-light" },
+        { "name": "esp32", "level": 1, "icon": "thesvg-color:espressif" },
+        { "name": "UART", "level": 3, "icon": "mdi:swap-horizontal-bold" },
+        { "name": "SPI", "level": 2, "icon": "mdi:swap-horizontal-bold" },
+        { "name": "I2C", "level": 2, "icon": "mdi:swap-horizontal-bold" },
+        { "name": "RS-232/RS-485", "level": 3, "icon": "mdi:serial-port" },
+        { "name": "Ethernet", "level": 2, "icon": "mdi:ethernet" },
+        { "name": "Modbus RTU/Modbus TCP", "level": 3, "icon": "mdi:network" },
+        { "name": "CAN", "level": 1, "icon": "/icons/can.png" }
+      ]
+    },
+    {
+      "title": "САПР и моделирование",
+      "skills": [
+        { "name": "Altium", "level": 2, "icon": "/icons/altium-designer.png" },
+        { "name": "Autocad", "level": 2, "icon": "skill-icons:autocad-light" },
+        { "name": "Компас", "level": 1, "icon": "/icons/compas.png" },
+        { "name": "SolidWorks", "level": 1, "icon": "/icons/solidworks.png" },
+        { "name": "STM32CubeIDE", "level": 2, "icon": "/icons/stm32cube.png" },
+        { "name": "CODESYS", "level": 2, "icon": "/icons/codesys.png" },
+        { "name": "MasterSCADA", "level": 1, "icon": "/icons/ms4d.png" },
+        { "name": "LabVIEW", "level": 2, "icon": "/icons/labview.png" }
+      ]
+    },
+    {
+      "title": "Веб",
+      "skills": [
+        { "name": "HTML", "level": 2, "icon": "skill-icons:html" },
+        { "name": "CSS", "level": 2, "icon": "skill-icons:css" },
+        { "name": "JavaScript", "level": 1, "icon": "skill-icons:javascript" },
+        { "name": "jQuery", "level": 1, "icon": "skill-icons:jquery" },
+        { "name": "Django", "level": 1, "icon": "skill-icons:django" }
+      ]
+    },
+    {
+      "title": "Инструменты",
+      "skills": [
+        { "name": "Debian", "level": 2, "icon": "skill-icons:debian-light" },
+        { "name": "Win", "level": 2, "icon": "skill-icons:windows-light" },
+        { "name": "Git", "level": 2, "icon": "skill-icons:git" },
+        { "name": "Docker", "level": 2, "icon": "skill-icons:docker" },
+        { "name": "Измерительные приборы", "level": 2, "icon": "mdi:tools" },
+        { "name": "ЕСКД/ЕСПД", "level": 2, "icon": "mdi:file-document-check-outline" },
+        { "name": "3D-печать", "level": 2, "icon": "mdi:printer-3d-nozzle" }
+      ]
+    },
+    {
+      "title": "Базы данных",
+      "skills": [
+        { "name": "PostgreSQL", "level": 1, "icon": "skill-icons:postgresql-light" },
+        { "name": "SQLite", "level": 2, "icon": "skill-icons:sqlite" }
+      ]
+    }
+  ]
+}
