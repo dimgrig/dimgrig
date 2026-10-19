@@ -13,7 +13,7 @@
       "title": "Устройства и протоколы",
       "skills": [
         { "name": "stm32", "level": 3, "icon": "thesvg-color:stmicroelectronics" },
-        { "name": "ПЛК", "level": 2, "icon": "/icons/plc.png" },
+        { "name": "ПЛК", "level": 2, "icon": "icons/plc.png" },
         { "name": "RPI/SBC", "level": 3, "icon": "skill-icons:raspberrypi-light" },
         { "name": "esp32", "level": 1, "icon": "thesvg-color:espressif" },
         { "name": "UART", "level": 3, "icon": "mdi:swap-horizontal-bold" },
@@ -22,20 +22,20 @@
         { "name": "RS-232/RS-485", "level": 3, "icon": "mdi:serial-port" },
         { "name": "Ethernet", "level": 2, "icon": "mdi:ethernet" },
         { "name": "Modbus RTU/Modbus TCP", "level": 3, "icon": "mdi:network" },
-        { "name": "CAN", "level": 1, "icon": "/icons/can.png" }
+        { "name": "CAN", "level": 1, "icon": "icons/can.png" }
       ]
     },
     {
       "title": "САПР и моделирование",
       "skills": [
-        { "name": "Altium", "level": 2, "icon": "/icons/altium-designer.png" },
+        { "name": "Altium", "level": 2, "icon": "icons/altium-designer.png" },
         { "name": "Autocad", "level": 2, "icon": "skill-icons:autocad-light" },
-        { "name": "Компас", "level": 1, "icon": "/icons/compas.png" },
-        { "name": "SolidWorks", "level": 1, "icon": "/icons/solidworks.png" },
-        { "name": "STM32CubeIDE", "level": 2, "icon": "/icons/stm32cube.png" },
-        { "name": "CODESYS", "level": 2, "icon": "/icons/codesys.png" },
-        { "name": "MasterSCADA", "level": 1, "icon": "/icons/ms4d.png" },
-        { "name": "LabVIEW", "level": 2, "icon": "/icons/labview.png" }
+        { "name": "Компас", "level": 1, "icon": "icons/compas.png" },
+        { "name": "SolidWorks", "level": 1, "icon": "icons/solidworks.png" },
+        { "name": "STM32CubeIDE", "level": 2, "icon": "icons/stm32cube.png" },
+        { "name": "CODESYS", "level": 2, "icon": "icons/codesys.png" },
+        { "name": "MasterSCADA", "level": 1, "icon": "icons/ms4d.png" },
+        { "name": "LabVIEW", "level": 2, "icon": "icons/labview.png" }
       ]
     },
     {

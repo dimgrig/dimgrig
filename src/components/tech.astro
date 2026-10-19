@@ -1,5 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import { resolveAssetImage } from '../utils/images';
 import localTechData from '../data/tech.json';
 
 interface Skill {
@@ -27,6 +29,21 @@ try {
 } catch {
   categories = localTechData.categories;
 }
+
+// Резолвим локальные PNG-иконки (paths, начинающиеся с "/" или "icons/")
+const categoriesWithImages = await Promise.all(
+  categories.map(async (cat) => ({
+    ...cat,
+    skills: await Promise.all(
+      cat.skills.map(async (s) => ({
+        ...s,
+        localImage: s.icon.startsWith('/') || s.icon.startsWith('icons/')
+          ? await resolveAssetImage(s.icon.replace(/^\//, ''))
+          : null,
+      }))
+    ),
+  }))
+);
 ---
 
 <section id="skills" class="section-container overflow-hidden">
@@ -63,7 +80,7 @@ try {
     </div>
 
     <div class="space-y-10">
-      {categories.map((category) => (
+      {categoriesWithImages.map((category) => (
         <div class="space-y-3">
           <h3 class="text-maintext font-body text-[11px] uppercase tracking-[0.4em] ml-1">
             {category.title}
@@ -74,8 +91,8 @@ try {
               <div class="skill-card opacity-0 group relative flex items-stretch min-h-14 rounded-xl bg-accent/5 border border-accent/15 hover:border-accent/40 hover:bg-accent/10 transition-all duration-300">
                 
                 <div class="shrink-0 w-12 flex items-center justify-center rounded-l-xl bg-accent/15 transition-colors group-hover:bg-accent/20">
-                  {skill.icon.startsWith('/') ? (
-                    <img src={skill.icon} alt={skill.name} class="w-7 h-7" loading="lazy" />
+                  {skill.localImage ? (
+                    <Image src={skill.localImage} alt={skill.name} width={40} height={40} class="w-7 h-7 object-contain" />
                   ) : (
                     <Icon name={skill.icon} class="w-7 h-7" />
                   )}
